@@ -18,8 +18,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef _LIBFDT_ENV_H
+#if !defined(_LIBFDT_ENV_H) && !defined(LIBFDT_ENV_H)
 #define _LIBFDT_ENV_H
+#define LIBFDT_ENV_H
 
 #include "compiler.h"
 
