@@ -66,14 +66,14 @@ SECTIONS
 		*(.dynsym)
 	}
 
-	_end = .;
-
-	.bss __rel_dyn_start (OVERLAY) : {
+	.bss : {
 		__bss_start = .;
 		*(.bss)
 		 . = ALIGN(4);
 		__bss_end__ = .;
 	}
+
+	_end = .;
 
 	
 	COMMON : {
