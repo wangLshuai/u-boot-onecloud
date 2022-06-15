@@ -451,10 +451,6 @@
 #define RAND64_ADDR0                               0x2040
 #define RAND64_ADDR1                               0x2041
 // ---------------------------
-// Ethernet (1)
-// ----------------------------
-#define PREG_ETHERNET_ADDR0                        0x2042
-// ---------------------------
 // AM_ANALOG_TOP
 // ----------------------------
 #define PREG_AM_ANALOG_ADDR                        0x2043
@@ -473,6 +469,10 @@
 #define PAD_PULL_UP_EN_REG4                        0x204c
 #define PAD_PULL_UP_EN_REG5                        0x204d
 #define PAD_PULL_UP_EN_REG6                        0x204e
+// ---------------------------
+// Ethernet (1)
+// ----------------------------
+#define PREG_ETHERNET_ADDR0                        0x2050
 // ---------------------------
 // SATA 
 // ----------------------------
