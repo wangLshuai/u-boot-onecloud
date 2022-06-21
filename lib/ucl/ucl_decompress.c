@@ -155,17 +155,18 @@ ucl_adler32(ucl_uint32 adler, const ucl_bytep buf, ucl_uint len)
     {
         k = len < UCL_NMAX ? (int) len : UCL_NMAX;
         len -= k;
-        if (k >= 16) do
+        while (k >= 16)
         {
             UCL_DO16(buf,0);
             buf += 16;
             k -= 16;
-        } while (k >= 16);
-        if (k != 0) do
+        }
+        while (k > 0)
         {
             s1 += *buf++;
             s2 += s1;
-        } while (--k > 0);
+            k--;
+        }
         s1 %= UCL_BASE;
         s2 %= UCL_BASE;
     }
