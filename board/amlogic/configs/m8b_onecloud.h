@@ -72,7 +72,15 @@
 #define CONFIG_VIDEO_AMLTVOUT
 #define CONFIG_AML_HDMI_TX		1
 #define CONFIG_OSD_SCALE_ENABLE
-#define LCD_BPP					(LCD_COLOR16)
+#define COLOR_BIT				24
+
+#if(COLOR_BIT == 16)
+	#define LCD_BPP				(LCD_COLOR16)
+#elif(COLOR_BIT == 24)
+	#define LCD_BPP				(LCD_COLOR24)
+#else
+	#error "unsupported COLOR_BIT"
+#endif
 
 #define CONFIG_CMD_BMP
 #define CONFIG_CMD_LOGO
@@ -168,16 +176,28 @@
 #define CONFIG_NETMASK				255.255.255.0
 #define CONFIG_SERVERIP				192.168.1.100
 #define CONFIG_BOOTFILE				"uImage"
+#if (COLOR_BIT == 16)
+	#define ENV_VIDEO_COLOR \
+		"display_color_format_index=16\0" \
+		"display_bpp=16\0" \
+		"display_color_fg=0xffff\0" \
+		"display_color_bg=0\0"
+#elif (COLOR_BIT == 24)
+	#define ENV_VIDEO_COLOR \
+		"display_color_format_index=24\0" \
+		"display_bpp=24\0" \
+		"display_color_fg=0xffffff\0" \
+		"display_color_bg=0\0"
+#else
+	#error "unsupported COLOR_BIT"
+#endif
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"outputmode=1080p\0" \
 	"video_dev=tvout\0" \
 	"display_width=1920\0" \
 	"display_height=1080\0" \
-	"display_bpp=16\0" \
-	"display_color_format_index=16\0" \
 	"display_layer=osd2\0" \
-	"display_color_fg=0xffff\0" \
-	"display_color_bg=0\0" \
+	ENV_VIDEO_COLOR \
 	"fb_addr=0x15100000\0" \
 	"fb_width=1280\0" \
 	"fb_height=720\0" \
