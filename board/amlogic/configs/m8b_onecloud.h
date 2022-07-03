@@ -158,7 +158,7 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //                             Environment variables
 // =============================================================================
-#define CONFIG_PREBOOT				"run show_logo; update 1"
+#define CONFIG_PREBOOT				"run show_logo; update 1000"
 #define CONFIG_BOOTDELAY			3
 #define CONFIG_BOOTCOMMAND			"run boot_usb_armbian || run boot_emmc_armbian"
 #define CONFIG_HOSTNAME				"onecloud"
