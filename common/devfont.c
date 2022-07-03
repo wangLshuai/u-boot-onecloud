@@ -22,8 +22,13 @@ static GraphicDevice *gdev = NULL;	/* Graphic Device */
 
 extern void mdelay(unsigned long msec);
 
-#define lcd_line_length	(gdev->winSizeX * gdev->gdfBytesPP)
-
+#ifdef CONFIG_OSD_SCALE_ENABLE
+	#define g_width		gdev->fb_width
+	#define g_height	gdev->fb_height
+#else
+	#define g_width		gdev->winSizeX
+	#define g_height	gdev->winSizeY
+#endif
 
 unsigned char is_rect_invalid(const RECT *rect)
 {
@@ -57,11 +62,11 @@ int DrawPixel(unsigned short x, unsigned short y, int color)
 {
     unsigned char *dest;
     
-    if((x > gdev->winSizeX) || (y > gdev->winSizeY)) {
+    if((x > g_width) || (y > g_height)) {
     	return	-1;
     }
     
-    dest = (uchar *)(gdev->frameAdrs + y * lcd_line_length + x * gdev->gdfBytesPP);
+    dest = (uchar *)(gdev->frameAdrs + gdev->gdfBytesPP * (g_width * y + x));
 	if(gdev->gdfBytesPP == 2)
 	{
 	    *dest++ = color & 0xff;
@@ -75,7 +80,7 @@ int DrawPixel(unsigned short x, unsigned short y, int color)
 	} else
 		return -1;
     
-    flush_cache((unsigned long)(gdev->frameAdrs), gdev->winSizeX * gdev->winSizeY * gdev->gdfBytesPP);
+    flush_cache((unsigned long)(gdev->frameAdrs), g_width * g_height * gdev->gdfBytesPP);
     return 0;
 }
 
@@ -84,7 +89,7 @@ int DrawRect(unsigned short x, unsigned short y, unsigned short w, unsigned shor
     unsigned char *dest;
     unsigned short row, col;
     
-    if((x > gdev->winSizeX) || (y > gdev->winSizeY)) {
+    if((x > g_width) || (y > g_height)) {
     	return -1;
     }
     
@@ -92,24 +97,25 @@ int DrawRect(unsigned short x, unsigned short y, unsigned short w, unsigned shor
     	return -1;
     }
     
-    dest = (unsigned char *)(gdev->frameAdrs + y * lcd_line_length + x * gdev->gdfBytesPP);
+    dest = (unsigned char *)(gdev->frameAdrs + gdev->gdfBytesPP * (g_width * y + x));;
     for(row=0; row<h; row++) {
     	for(col=0; col<w; col++) {
-			if(gdev->gdfBytesPP == GDF_16BIT_565RGB)
+			if(gdev->gdfBytesPP == 2)
 			{
 	    	    *dest++ = color & 0xff;
 	    	    *dest++ = (color >> 8) & 0xff;
 			}
-			else if(gdev->gdfBytesPP == GDF_24BIT_888RGB)
+			else if(gdev->gdfBytesPP == 3)
 			{
 	    	    *dest++ = color & 0xff;
 	    	    *dest++ = (color >> 8) & 0xff;
 	    	    *dest++ = (color >> 16) & 0xff;
-			}
+			} else
+				return -1;
     	}
-    	dest = (unsigned char *)(gdev->frameAdrs + (y + row) * lcd_line_length + x * gdev->gdfBytesPP);
+    	dest = (unsigned char *)(gdev->frameAdrs + gdev->gdfBytesPP * (g_width * (y + row) + x));
     }
-    flush_cache((unsigned long)(gdev->frameAdrs), gdev->winSizeX * gdev->winSizeY * gdev->gdfBytesPP);
+    flush_cache((unsigned long)(gdev->frameAdrs), gdev->gdfBytesPP * g_width * g_height);
     return 0;
 }
 
@@ -118,7 +124,7 @@ int DrawFont(int x, int y, int font_width, int font_height, int font_color, unsi
     RECT draw_rect;
     unsigned int w,h;
 
-    if((x > gdev->winSizeX) || (y > gdev->winSizeY)) {
+    if((x > g_width) || (y > g_height)) {
     	return -1;
     }
 
