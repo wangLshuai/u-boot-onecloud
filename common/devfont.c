@@ -399,3 +399,73 @@ U_BOOT_CMD(
 );
 
 
+
+int print_x = 0;
+int print_y = 0;
+
+void do_print_char(char c)
+{
+	if(gpCurFont == NULL)
+	 	return;
+
+	int color = simple_strtoul(getenv("print_color"), NULL, 16);
+
+	switch(c) {
+		case '\n':
+			print_y += gpCurFont->font_height;
+			// fallthrough
+		case '\r':
+			print_x = 0;
+			break;
+		default: {
+			unsigned short ch_width;
+			unsigned char *pFont = gpCurFont->GetFontBitmap(c, &ch_width);
+			if((print_x + ch_width) >= g_width) {
+				print_y += gpCurFont->font_height;
+				print_x = 0;
+			}
+			DrawFont(print_x, print_y, ch_width, gpCurFont->font_height, color, pFont);
+			print_x += ch_width + gpCurFont->font_gaps;
+			break;
+		}
+	}
+}
+
+int do_print(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
+{
+	int i = 1;
+	int newline = 1;
+	
+	for(i = 1; i < argc; i++) {
+		if(strcmp(argv[i], "-n") == 0) {
+			newline = 0;
+		} else if(strcmp(argv[i], "--") == 0) {
+			i++;
+			break;
+		} else {
+			break;
+		}
+	}
+	
+	int n = 0;
+	for(; i < argc; i++) {
+		if (n++)
+			do_print_char(' ');
+
+		char *p;
+		for(p = argv[i]; *p; p++)
+			do_print_char(*p);
+	}
+
+	if(newline)
+		do_print_char('\n');
+
+	return 0;
+}
+
+U_BOOT_CMD(
+	print,	CONFIG_SYS_MAXARGS,	1,	do_print,
+	"Display text on the screen",
+	"drawstr [-n] [--] <text>\n"
+	"Draw text with '$print_color'."
+);
