@@ -73,6 +73,7 @@
 #define CONFIG_AML_HDMI_TX		1
 #define CONFIG_OSD_SCALE_ENABLE
 #define COLOR_BIT				24
+#define CONFIG_AML_FONT
 
 #if(COLOR_BIT == 16)
 	#define LCD_BPP				(LCD_COLOR16)

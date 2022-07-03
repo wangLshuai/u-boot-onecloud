@@ -62,17 +62,18 @@ int DrawPixel(unsigned short x, unsigned short y, int color)
     }
     
     dest = (uchar *)(gdev->frameAdrs + y * lcd_line_length + x * gdev->gdfBytesPP);
-	if(gdev->gdfBytesPP == GDF_16BIT_565RGB)
+	if(gdev->gdfBytesPP == 2)
 	{
 	    *dest++ = color & 0xff;
 	    *dest++ = (color >> 8) & 0xff;
 	}
-	else if(gdev->gdfBytesPP == GDF_24BIT_888RGB)
+	else if(gdev->gdfBytesPP == 3)
 	{
 	    *dest++ = color & 0xff;
 	    *dest++ = (color >> 8) & 0xff;
 	    *dest = (color >> 16) & 0xff;
-	}
+	} else
+		return -1;
     
     flush_cache((unsigned long)(gdev->frameAdrs), gdev->winSizeX * gdev->winSizeY * gdev->gdfBytesPP);
     return 0;
