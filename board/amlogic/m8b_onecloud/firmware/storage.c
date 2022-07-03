@@ -5,7 +5,7 @@
 //partition tables
 struct partitions partition_table[]={
 	{
-		.name = "logo",
+		.name = "resource",
 		.size = 32 * SZ_1M,
 		.mask_flags = STORE_DATA,
 	},
