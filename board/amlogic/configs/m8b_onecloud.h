@@ -167,9 +167,9 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //                             Environment variables
 // =============================================================================
-#define CONFIG_PREBOOT				"run show_logo; update 1000"
+#define CONFIG_PREBOOT				"run prepare_video; run check_usbburn"
 #define CONFIG_BOOTDELAY			3
-#define CONFIG_BOOTCOMMAND			"run boot_usb_armbian || run boot_emmc_armbian"
+#define CONFIG_BOOTCOMMAND			"print 'Booting...'; run boot_usb_armbian || run boot_emmc_armbian || print 'Failed to boot'; "
 #define CONFIG_HOSTNAME				"onecloud"
 #define CONFIG_ETHADDR				00:15:18:01:81:31
 #define CONFIG_IPADDR				192.168.1.150
@@ -203,23 +203,32 @@
 	"fb_width=1280\0" \
 	"fb_height=720\0" \
 	"loadaddr_logo=0x13000000\0" \
-	"show_logo=" \
-		"logo size ${outputmode}; " \
+	"prepare_video=" \
 		"video open; " \
 		"video clear; " \
 		"video dev open ${outputmode}; " \
 		"imgread pic resource bootup ${loadaddr_logo}; " \
 		"bmp display ${bootup_offset}; " \
 		"bmp scale; " \
+		"set_fontsize 24; " \
+		"setenv print_color 0xFFFFFF; " \
+		"print 'U-Boot'; " \
+		"\0" \
+	\
+	"check_usbburn=" \
+		"print 'Checking USBBurn ...'; " \
+		"update 1000" \
 		"\0" \
 	\
 	"loadaddr=0x12000000\0" \
 	"boot_emmc_armbian=" \
+		"print 'Try to boot from eMMC...'; " \
 		"bootdev='mmc 1'; " \
 		"rootdev='/dev/mmcblk1p2'; " \
 		"fatload ${bootdev} ${loadaddr} boot.scr && autoscr ${loadaddr}; " \
 		"\0" \
 	"boot_usb_armbian=" \
+		"print 'Try to boot from USB...'; " \
 		"bootdev='usb 0'; " \
 		"rootdev='/dev/sda2'; " \
 		"usb start && fatload ${bootdev} ${loadaddr} boot.scr && autoscr ${loadaddr}; " \
