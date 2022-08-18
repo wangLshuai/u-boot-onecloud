@@ -224,15 +224,13 @@
 	"loadaddr=0x12000000\0" \
 	"boot_emmc_armbian=" \
 		"print -n 'Try to boot from eMMC...'; " \
-		"bootdev='mmc 1'; " \
-		"rootdev='/dev/mmcblk1p2'; " \
+		"setenv bootdev 'mmc 1'; " \
 		"fatload ${bootdev} ${loadaddr} boot.scr && autoscr ${loadaddr}; " \
 		"print 'Fail'; " \
 		"\0" \
 	"boot_usb_armbian=" \
 		"print -n 'Try to boot from USB...'; " \
-		"bootdev='usb 0'; " \
-		"rootdev='/dev/sda2'; " \
+		"setenv bootdev 'usb 0'; " \
 		"usb start && fatload ${bootdev} ${loadaddr} boot.scr && autoscr ${loadaddr}; " \
 		"print 'Fail'; " \
 		"\0" \
