@@ -258,20 +258,8 @@
 
 	#define CONFIG_CMD_SAVEENV
 
-	// SPI
-	#define CONFIG_CMD_SF
-	#define CONFIG_ENV_SECT_SIZE			(0x1000)
-	#define CONFIG_ENV_IN_SPI_OFFSET		(0x100000)
-
-	// NAND
-	#define CONFIG_CMD_NAND
+	// `store` sub-system
 	#define CONFIG_NEXT_NAND
-	// #define CONFIG_ENV_IN_NAND_OFFSET	(0x400000)
-	// #define CONFIG_ENV_BLOCK_NUM			(2)
-
-	// eMMC
-	#define CONFIG_SYS_MMC_ENV_DEV			(1)
-	#define CONFIG_ENV_IN_EMMC_OFFSET		(0x80000)
 #else
 	#define CONFIG_CMD_SAVEENV
 
