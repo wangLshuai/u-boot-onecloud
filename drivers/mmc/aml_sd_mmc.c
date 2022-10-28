@@ -13,6 +13,7 @@
 #include <malloc.h>
 #include <asm/dma-mapping.h>
 #include <asm/arch/io.h>
+#include <asm/arch/romboot.h>
 #include <asm/arch/sdio.h>
 #include <mmc.h>
 
@@ -818,4 +819,14 @@ bool aml_is_emmc_tsd (struct mmc *mmc) // is eMMC OR TSD
     struct aml_card_sd_info * sdio=mmc->priv;
 
     return ((sdio->sdio_port == SDIO_PORT_C) || (sdio->sdio_port == SDIO_PORT_XC_C));
+}
+
+bool aml_is_boot_device(struct mmc *mmc) // is boot device
+{
+    struct aml_card_sd_info * sdio=mmc->priv;
+
+	if(C_ROM_BOOT_DEBUG->boot_id != 1) // boot from eMMC or USB
+		return ((sdio->sdio_port == SDIO_PORT_C) || (sdio->sdio_port == SDIO_PORT_XC_C));
+	else // boot from SDCard
+		return ((sdio->sdio_port == SDIO_PORT_B) || (sdio->sdio_port == SDIO_PORT_XC_B));
 }

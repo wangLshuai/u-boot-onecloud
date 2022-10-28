@@ -52,6 +52,7 @@
 #include <asm/cache.h>
 
 #include <asm/arch/reboot.h>
+#include <asm/arch/romboot.h>
 #include <partition_table.h>
 
 
@@ -534,7 +535,10 @@ unsigned int emmc_init(void)
 {
     int ret = -1;
     struct mmc *mmc = NULL;
-	mmc = find_mmc_device(1);
+	if(C_ROM_BOOT_DEBUG->boot_id != 1) // boot from eMMC or USB
+		mmc = find_mmc_device(1);
+	else // boot from SDCard
+		mmc = find_mmc_device(0);
 	if (mmc) {
 		ret = mmc_init(mmc); // init eMMC/tSD+    
 	}
