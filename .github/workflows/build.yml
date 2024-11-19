@@ -105,7 +105,7 @@ jobs:
           ./AmlImg pack build/eMMC.burn.img pack/
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           path: |
             build/*.bin
@@ -123,4 +123,4 @@ jobs:
             -a build/resource.img \
             -a build/eMMC.burn.img
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN  }}
